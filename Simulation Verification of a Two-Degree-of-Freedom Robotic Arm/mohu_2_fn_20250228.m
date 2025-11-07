@@ -1,14 +1,14 @@
 function dx = mohu_2_fn_20250228(t,x)
-N=2; %¶à±ßÊýÁ¿
-n=3; %Á¥Êô¹æÔòÊý
-m=2; %µ¥±ßÖÐÁ¥Êôº¯ÊýÊýÁ¿
+N=2;
+n=3; 
+m=2; 
 
 % dx=zeros(2*6+2*N+(n^4)*N+(n^4)*N+(n^4)+(n^4)+2*N,1);
 dx=zeros(2*6+2*N+(n^4)*N*m+(n^4)*N*m+(n^4)*N*m+2+N*m+8,1);
-A=[0,0,1,0;0,0,0,1;0,0,0,0;0,0,0,0];%RR-botÏµÍ³
-B=[0 0;0 0;1 0;0 1];%RR-botÏµÍ³
-Ar=[0,0,1,0;0,0,0,1;-1,0,-2,0;0,-1,0,-2];%²Î¿¼ÏµÍ³
-Br=[0 0;0 0;1 0;0 1];%²Î¿¼ÏµÍ³
+A=[0,0,1,0;0,0,0,1;0,0,0,0;0,0,0,0];
+B=[0 0;0 0;1 0;0 1];
+Ar=[0,0,1,0;0,0,0,1;-1,0,-2,0;0,-1,0,-2];
+Br=[0 0;0 0;1 0;0 1];
 
 r1=sin(t);r2=cos(t);
 % if t>=20 && t<50
@@ -34,12 +34,11 @@ e22=x(8)-x(4);
 e2=[e21;e22];
 e=[e11;e21;e12;e22];%e=[e,e']
 
-%RR-botÏµÍ³²ÎÊý
-a0=1;%Á¬¸Ë1³¤¶ÈÎª1
-a1=1;%Á¬¸Ë2³¤¶ÈÎª1
-m1=0.1;%Á¬¸Ë1µÄÖÊÁ¿Îª0.1kg
-m2=0.1;%Á¬¸Ë2µÄÖÊÁ¿Îª0.2kg
-gs=9.8;%ÖØÁ¦¼ÓËÙ¶È
+a0=1;
+a1=1;
+m1=0.1;
+m2=0.1;
+gs=9.8;
 M=[(a0^2*m1)/3 + a0^2*m2 + (a1^2*m2)/3 + a0*a1*m2*cos(x(2)),  (a1*m2*(2*a1 + 3*a0*cos(x(2))))/6;
     (a1*m2*(2*a1 + 3*a0*cos(x(2))))/6,  (a1^2*m2)/3];
 C=[-(a0*a1*x(4)*m2*sin(x(2)))/2,   -(a0*a1*m2*sin(x(2))*(x(3) + x(4)))/2;
@@ -47,9 +46,8 @@ C=[-(a0*a1*x(4)*m2*sin(x(2)))/2,   -(a0*a1*m2*sin(x(2))*(x(3) + x(4)))/2;
 G=[gs*m2*((a1*cos(x(1) + x(2)))/2 + a0*cos(x(1))) + (a0*gs*m1*cos(x(1)))/2;
     (a1*gs*m2*cos(x(1) + x(2)))/2];
 
-%¼ÆËãÏµÍ³²»È·¶¨Ïîf
-if abs(det(M))<1e-3   %¼ÆËã¾ØÕó M µÄÐÐÁÐÊ½£¬²¢È¡Æä¾ø¶ÔÖµ£¬ÖµÐ¡ÓÚ 1e-3£¬ÈÏÎª¾ØÕó M½Ó½üÆæÒì
-    pseudo_invM=M'*M\M';   %¾ØÕóMÊÇ ÆæÒì¾ØÕó£¬¼ÆËãÎ±Äæ
+if abs(det(M))<1e-3   
+    pseudo_invM=M'*M\M'; 
     un_model=-pseudo_invM*(C*[x(3);x(4)]+G);
 else
     un_model=-inv(M)*(C*[x(3);x(4)]+G);
@@ -62,7 +60,6 @@ Al=A-B*ke';
 Q=10*eye(4);
 P=lyap(Al,Q);
 
-%¶þ½×ÏßÐÔÂË²¨
 zeta=0.7;
 omega=100;
 AA=[1,0;0,1];
@@ -75,12 +72,8 @@ en2=BB'*e2;
 dx(9)=x(10);
 dx(10)=-2*zeta*omega*x(10)+omega^2*(en1-x(9));
 dx(11)=x(12);
-dx(12)=-2*zeta*omega*x(12)+omega^2*(en2-x(11));%¶þ½×ÂË²¨µÄÎó²î¼°Æäµ¼ÊýµÄÊä³ö
+dx(12)=-2*zeta*omega*x(12)+omega^2*(en2-x(11));
 
-% Ä£ºý¿ØÖÆ
-% Ã¿¸öÄ£ºý¿ØÖÆÖÐ°üº¬Á½¸öÁ¥Êô¶Èº¯Êý£¬¾­¹ý¼ÓÈ¨ÈÚºÏµÄÊä³ö½á¹û£¬
-% µÚÒ»Ìõ±ßµÄ¹¹³É£¬¸ßË¹+ÖÓÐÍ
-% ¼ÆËã¸ßË¹Á¥Êô¶È
 % sigma1 =0.6; 
 % centers1 = [-6, 0, 6];
 sigma1 =3;
@@ -91,12 +84,11 @@ membership.dq11 = zeros(1, n);
 membership.dq12 = zeros(1, n);
 for i = 1:n
     membership.q11(i) = exp(-((x(1) - centers1(i))^2) /(2*sigma1^2));
-    membership.q12(i) = exp(-((x(2) - centers1(i))^2) /(2*sigma1^2));       %£¿£¿£¿£¿
+    membership.q12(i) = exp(-((x(2) - centers1(i))^2) /(2*sigma1^2));       
     membership.dq11(i) = exp(-((x(3) - centers1(i))^2) /(2*sigma1^2));
     membership.dq12(i) = exp(-((x(4) - centers1(i))^2) /(2*sigma1^2));
 end
 
-% ¼ÆËãÖÓÐÎÁ¥Êô¶È
 sigma2 =8;
 centers2 = [-25, 0, 25];
 % centers2 = [-40,-20, 0, 20,40];
@@ -110,9 +102,6 @@ for i = 1:n
     membership.dq21(i) = 1 /(1+sigma2*(x(3)-centers2(i))^2);
     membership.dq22(i) = 1 /(1+sigma2*(x(4)-centers2(i))^2);
 end
-
-% µÚ¶þÌõ±ßµÄ¹¹³É£¬¸ßË¹+PIÐÍ
-% piÐÍÁ¥Êô¶Èº¯Êý
 
 params1=[1 6 14 20];
 params2=[-10 -5 8 10];
@@ -128,7 +117,6 @@ for i = 1:n
     membership.dq32(i) = pimf(x(4), params(i,:));
 end
 
-% ¼ÆËã¸ßË¹Á¥Êô¶È
 sigma4 =8; 
 centers4 = [-45, 0, 45];
 membership.q41 = zeros(1, n);
@@ -137,13 +125,11 @@ membership.dq41 = zeros(1, n);
 membership.dq42 = zeros(1, n);
 for i = 1:n
     membership.q41(i) = exp(-((x(1) - centers4(i))^2) /(2*sigma4^2));
-    membership.q42(i) = exp(-((x(2) - centers4(i))^2) /(2*sigma4^2));       %£¿£¿£¿£¿
+    membership.q42(i) = exp(-((x(2) - centers4(i))^2) /(2*sigma4^2));     
     membership.dq41(i) = exp(-((x(3) - centers4(i))^2) /(2*sigma4^2));
     membership.dq42(i) = exp(-((x(4) - centers4(i))^2) /(2*sigma4^2));
 end
 
-% ¹éÒ»»¯´¦Àí
-% µÚÒ»Ìõ±ßµÄ¹¹³É£¬¸ßË¹+ÖÓÐÍ
 FS12=zeros(n^4,1);
 FS11=0;
 for L1=1:n
@@ -173,7 +159,7 @@ for L1=1:n
 end
 xi_21 = FS22 / (FS21+0.0005);
 xi_22=reshape(xi_21,n^4,1);   
-% µÚ¶þÌõ±ßµÄ¹¹³É£¬¸ßË¹+PIÐÍ
+
 FS32=zeros(n^4,1);
 FS31=0;
 for L1=1:n
@@ -203,78 +189,72 @@ for L1=1:n
 end
 xi_41 = FS42 / (FS41+0.0005);
 xi_42=reshape(xi_41,n^4,1);   
-%¹éÒ»»¯´æ´¢
-% xi_2=reshape(xi_1,n^4,1);                         %²»ÓÃÕâÒ»²¿·Ö
+
+% xi_2=reshape(xi_1,n^4,1);               
 
 dx(12+2*N+(n^4)*8+1:12+2*N+(n^4)*8+n^4)=xi_12; 
-dx(12+2*N+(n^4)*9+1:12+2*N+(n^4)*9+n^4)=xi_22;              %¹éÒ»»¯´æ´¢
+dx(12+2*N+(n^4)*9+1:12+2*N+(n^4)*9+n^4)=xi_22; 
 dx(12+2*N+(n^4)*10+1:12+2*N+(n^4)*10+n^4)=xi_32;
 dx(12+2*N+(n^4)*11+1:12+2*N+(n^4)*11+n^4)=xi_42;
 
-% µÚÒ»Ìõ±ßµÄ¹¹³É
+% ç¬¬ä¸€æ¡è¾¹çš„æž„æˆ
 W_hat_m11=x(12+2*N+1:12+2*N+n^4);
-y_hat_m11= W_hat_m11(:)'* xi_12;                  %¸ßË¹ 1
+y_hat_m11= W_hat_m11(:)'* xi_12;                
 
 W_hat_m12(:)=x(12+2*N+(n^4)*4+1:12+2*N+(n^4)*4+n^4);
-y_hat_m12= W_hat_m12(:)'* xi_12;                   %¸ßË¹ 2
-
+y_hat_m12= W_hat_m12(:)'* xi_12;            
 W_hat_m21(:)=x(12+2*N+(n^4)+1:12+2*N+(n^4)+n^4);
-y_hat_m21= W_hat_m21(:)'* xi_22;                   %ÖÓÐÍ 1
+y_hat_m21= W_hat_m21(:)'* xi_22;                
 
 W_hat_m22(:)=x(12+2*N+(n^4)*5+1:12+2*N+(n^4)*5+n^4);
-y_hat_m22= W_hat_m22(:)'* xi_22;                     %ÖÓÐÍ 2
+y_hat_m22= W_hat_m22(:)'* xi_22;
 % 
 % y_hat_11=zeros(length(t),1);
 % y_hat_12=zeros(length(t),1);
 
-% µÚ¶þÌõ±ßµÄ¹¹³É
+
 W_hat_m31(:)=x(12+2*N+(n^4)*2+1:12+2*N+(n^4)*2+n^4);
-y_hat_m31= W_hat_m31(:)'* xi_32;                          %PIÐÍ 1
+y_hat_m31= W_hat_m31(:)'* xi_32;                        
 
 W_hat_m32(:)=x(12+2*N+(n^4)*6+1:12+2*N+(n^4)*6+n^4);
-y_hat_m32= W_hat_m32(:)'* xi_32;                            %PIÐÍ 2
+y_hat_m32= W_hat_m32(:)'* xi_32;                         
 
 W_hat_m41(:)=x(12+2*N+(n^4)*3+1:12+2*N+(n^4)*3+n^4);
-y_hat_m41= W_hat_m41(:)'* xi_42;                               %¸ßË¹ 1
+y_hat_m41= W_hat_m41(:)'* xi_42;                            
 
 W_hat_m42(:)=x(12+2*N+(n^4)*7+1:12+2*N+(n^4)*7+n^4);
-y_hat_m42= W_hat_m42(:)'* xi_42;                                 %¸ßË¹ 2
+y_hat_m42= W_hat_m42(:)'* xi_42;                            
 
-%µ¥±ßË«ºËÊä³ö ÈÚºÏ
-y_hat_11=y_hat_m11+y_hat_m21;                 %µÚÒ»ÌõÄ£ºýÊä³ö£¬¹Ø½Ú1
-y_hat_12=y_hat_m12+y_hat_m22;                 %µÚÒ»ÌõÄ£ºýÊä³ö£¬¹Ø½Ú2
+%å•è¾¹åŒæ ¸è¾“å‡º èžåˆ
+y_hat_11=y_hat_m11+y_hat_m21;               
+y_hat_12=y_hat_m12+y_hat_m22;                 
 
-y_hat_21=y_hat_m31+y_hat_m41;                 %µÚ¶þÌõÄ£ºýÊä³ö£¬¹Ø½Ú1
-y_hat_22=y_hat_m32+y_hat_m42;                 %µÚ¶þÌõÄ£ºýÊä³ö£¬¹Ø½Ú2
+y_hat_21=y_hat_m31+y_hat_m41;               
+y_hat_22=y_hat_m32+y_hat_m42;                 
 
-y_hat_1=[y_hat_m11,y_hat_m21,y_hat_m31,y_hat_m41];             %¹Ø½Ú1
-y_hat_2=[y_hat_m12,y_hat_m22,y_hat_m32,y_hat_m42];             %¹Ø½Ú2
+y_hat_1=[y_hat_m11,y_hat_m21,y_hat_m31,y_hat_m41];         
+y_hat_2=[y_hat_m12,y_hat_m22,y_hat_m32,y_hat_m42];          
 xi_1=[xi_12,xi_22,xi_32,xi_42];
 
-%Ë«±ßÊä³öÈÚºÏ
 y_hat_m1=[y_hat_11,y_hat_21];             
 y_hat_m2=[y_hat_12,y_hat_22];
 
-% ¶à±ßÑ§Ï°Êä³ö
 y_hat1=x(12+1:12+N)'*y_hat_m1'; 
 y_hat2=x(12+N+1:12+N+N)'*y_hat_m2'; 
 
-%²Î¿¼Êä³ö
 y_ref1=-(x(10)-All(2,1)*e11-All(2,2)*e12)+y_hat1;
 y_ref2=-(x(12)-All(2,1)*e21-All(2,2)*e22)+y_hat2;
 
 dx(12+2*N+(n^4)*N*m+(n^4)*N*m+(n^4)*N*m+1)=y_ref1;
 dx(12+2*N+(n^4)*N*m+(n^4)*N*m+(n^4)*N*m+2)=y_ref2;         
-%Ä£ºý Ë«ºË£¬¿ØÖÆ±Æ½üÎó²î
+
 ee_yn_1=y_ref1-y_hat_1;       
 ee_yn_2=y_ref2-y_hat_2;   
-%¶à±ßÑ§Ï°±Æ½üÎó²î
+
 e_y1=y_ref1-y_hat1; 
 e_y2=y_ref2-y_hat2; 
 
-% Êä³ö
 u=ke'*e+kr'*xre-[y_hat1;y_hat2];
-%Ä£ºý¿ØÖÆ²ÎÊý¸üÐÂ
 eta1 =[40,40,40,50]; eta2 =[50,50,60,50];
 m_1=[32,32,32,42];    m_2=[40,40,50,40];
 
@@ -332,7 +312,7 @@ for i=1:N*m
          rowi = 12+2*N+(n^4)*N*m+(i-1)*(n^4)+1;coli =12+2*N+(n^4)*N*m+(i-1)*(n^4)+n^4;
          dx(rowi:coli)=dW_hat_2(i,:);
 end
-% % %///////////////////////////////////////////////////////////////Ë«±ßÄ£ºýÈ¨ÖØ¸üÐÂ
+
 % alpha1=[1,1];
 % alpha2=[1,1];
 % dW_hat1=zeros(N,1);
@@ -345,8 +325,7 @@ end
 % end
 % dx(12+2*N+(n^4)*N*m+(n^4)*N*m+(n^4)*N*m+2+4+1:12+2*N+(n^4)*N*m+(n^4)*N*m+(n^4)*N*m+2+4+2)=dW_hat1;
 % dx(12+2*N+(n^4)*N*m+(n^4)*N*m+(n^4)*N*m+2+4+3:12+2*N+(n^4)*N*m+(n^4)*N*m+(n^4)*N*m+2+4+4)=dW_hat2;
-% % % /////////////////////////////////////////////////////////////////
-%¶à±ßÈ¨ÖØ¸üÐÂ
+
 gamma1= 0.8;
 gamma2= 0.4;
 
@@ -369,84 +348,3 @@ dx(6)=x(8);
 dx(7)=-x(5)-2*x(7)+r1;
 dx(8)=-x(6)-2*x(8)+r2;
 end
-
-% ¼ÆËãsigmoidÁ¥Êô¶È
-% M=[-2,2];
-% % c1= [-10, 0, 10];
-% c2= [-10, 0, 10];
-% steepness2=1.5;
-% membership.q31=zeros(1, n);
-% membership.q32=zeros(1, n);
-% membership.dq31=zeros(1, n);
-% membership.dq32=zeros(1, n);
-% % for k = 1:3
-% %     membership.q21(k) = 1 ./(1+exp(-M(1)*(x(1)-c1(k))/steepness1));
-% %     membership.q22(k) = 1 ./(1+exp(-M(1)*(x(2)-c1(k))/steepness1));
-% %     membership.dq21(k) = 1. /(1+exp(-M(1)*(x(3)-c1(k))/steepness1));
-% %     membership.dq22(k) =1 ./(1+exp(-M(1)*(x(4)-c1(k))/steepness1));
-% % end
-% 
-% for k = 1:3
-%     membership.q31(k) = 1 ./(1+exp(-M(2)*(x(1)-c2(k))/steepness2));
-%     membership.q32(k) = 1 ./(1+exp(-M(2)*(x(2)-c2(k))/steepness2));
-%     membership.dq31(k) = 1. /(1+exp(-M(2)*(x(3)-c2(k))/steepness2));
-%     membership.dq32(k) =1 ./(1+exp(-M(2)*(x(4)-c2(k))/steepness2));
-% end
-
-% ¼ÆËãÈý½ÇÐÎº¯ÊýÁ¥Êô¶È,Èý×éÈý½ÇÐÎº¯Êý
-    % ¶¨ÒåÈý¸öÈý½ÇÐÎµÄ²ÎÊý  
-%     % Ã¿¸öÈý½ÇÐÎµÄÐÎÊ½Îª[a, b, c]£¬·Ö±ðÎª×ó¶¥µã¡¢ÖÐ¼ä¶¥µãºÍÓÒ¶¥µã  
-%     m=40;
-%     triangle1 = [-m,0, m];  
-%     triangle2 = [-2*m, -m, 0];  
-%     triangle3 = [0, m, 2*m];  
-% 
-% % ¼ÆËãÁ¥Êô¶È  
-% membership.q31 = zeros(1, n);
-% membership.q32 = zeros(1, n);
-% membership.dq31 = zeros(1, n);
-% membership.dq32 = zeros(1, n);
-% mu1= zeros(1, 4);
-% mu2= zeros(1, 4);
-% mu3= zeros(1, 4);
-% mu= zeros(3, 4);
-% 
-% for i=1:4
-%     mu1(i) = triangular_mf(x(i), triangle1);  
-%     mu2(i) = triangular_mf(x(i), triangle2);  
-%     mu3(i) = triangular_mf(x(i), triangle3);  
-%     mu=[mu1',mu2',mu3']';
-% end
-% 
-% function mu = triangular_mf(x, params)  
-%     % params: [a, b, c] È·¶¨Èý½ÇÐÎº¯ÊýµÄ²ÎÊý  
-%     a = params(1);  
-%     b = params(2);  
-%     c = params(3);  
-%     
-%     mu = max(min((x - a) / (b - a), (c - x) / (c - b)), 0.01);  
-% end
-% xi_1=[xi_12,xi_22];
-% y_hat_m1=zeros(1,N);
-% y_hat_m2=zeros(1,N);
-%  W_hat11=x(12+2*N+1:12+2*N+(n^4)*m);                                  %µÚÒ»ÌõÄ£ºýµ¥±ßµÄÈ¨ÖØ£¬2¸öÁ¥Êôº¯Êý£¬¹Ø½Ú1
-%  W_hat12=x(12+2*N+(n^4)*m+1:12+2*N+(n^4)*m+(n^4)*m);   %µÚÒ»ÌõÄ£ºýµ¥±ßµÄÈ¨ÖØ£¬¹Ø½Ú2
-%  for i=1:2
-%       y_hat_m11(i)= W_hat11((n^4)*(i-1)+1:(n^4)*(i-1)+(n^4))'* xi_1(:,i);
-%       y_hat_m12(i)= W_hat12((n^4)*(i-1)+1:(n^4)*(i-1)+(n^4))'* xi_1(:,i);
-%  end
-% y_hat_11=y_hat_m11(1)+y_hat_m11(2);    %µÚÒ»ÌõÄ£ºýÊä³ö£¬¹Ø½Ú1
-% y_hat_12=y_hat_m12(1)+y_hat_m12(2);    %µÚÒ»ÌõÄ£ºýÊä³ö£¬¹Ø½Ú2
-% 
-% xi_2=[xi_32,xi_42];
-% y_hat_m21=zeros(1,N);
-% y_hat_m22=zeros(1,N);
-%  W_hat21=x(12+2*N+(n^4)*m+(n^4)*m+1:12+2*N+(n^4)*m+(n^4)*m+(n^4)*m);
-%  W_hat22=x(12+2*N+(n^4)*m*3+1:12+2*N+(n^4)*m*3+(n^4)*m);
-%  for i=1:2
-%       y_hat_m21(i)= W_hat21((n^4)*(i-1)+1:(n^4)*(i-1)+(n^4))'* xi_2(:,i);
-%       y_hat_m22(i)= W_hat22((n^4)*(i-1)+1:(n^4)*(i-1)+(n^4))'* xi_2(:,i);
-%  end
-% y_hat_21=y_hat_m21(1)+y_hat_m22(1);    %µÚ¶þÌõÄ£ºýÊä³ö£¬¹Ø½Ú1
-% y_hat_22=y_hat_m21(2)+y_hat_m22(2);    %µÚ¶þÌõÄ£ºýÊä³ö£¬¹Ø½Ú2
-% 
