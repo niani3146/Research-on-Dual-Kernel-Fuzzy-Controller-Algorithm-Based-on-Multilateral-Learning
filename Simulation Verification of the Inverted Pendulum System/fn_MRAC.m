@@ -1,4 +1,3 @@
-n=2;%选取的边数
 ee_yn_pre=zeros(n,1);
 
 t0=0;tf=30;
@@ -10,7 +9,7 @@ para_k=ones(1,n)/n;
 para_d=zeros(1,2*n+n);
 x0=[1,1,1,1,0,0,...
     para_y,para_k,para_d];
-options = odeset('MaxStep', 0.001); % 设置最大步长
+options = odeset('MaxStep', 0.001); 
 [t,x]=ode45(@fn_MRAC_ode,[t0,tf],x0,options);
 
 x_ref=[sin(t),cos(t)];
@@ -81,3 +80,4 @@ Y_hat_3=y_hat;
 % plot(t,x(:,7+n:6+2*n));
 
 % hold on;grid on;legend('k1','k2','k3','k4','k5','k6','k7')
+
