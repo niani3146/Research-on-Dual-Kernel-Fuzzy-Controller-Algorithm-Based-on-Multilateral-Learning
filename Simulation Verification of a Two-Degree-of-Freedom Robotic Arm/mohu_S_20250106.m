@@ -1,24 +1,8 @@
-% clear all;
-% close all;
 N=1;
 n=5;
 
 t0=0;tf=30;
 T=linspace(t0,tf,100);
-
-% para_k=linspace(-0.01,0.01,n^4);
-% para_w=linspace(-0.01,0.01,n^4);
-% 
-% % for i = 1:N
-% %     min_val = -0.01 - (i - 1) * 0.003;
-% %     max_val = 0.001 + (i - 1) * 0.003; 
-% %     para_k((i-1)*(n^4)+1:(i-1)*(n^4)+(n^4)) = linspace(min_val, max_val, (n^4))';
-% % end
-% % for i = 1:N
-% %     min_val = -0.01 - (i - 1) * 0.003;
-% %     max_val = 0.001 + (i - 1) * 0.0003; 
-% %     para_w((i-1)*(n^4)+1:(i-1)*(n^4)+(n^4)) = linspace(min_val, max_val, (n^4))'; 
-% % end
 
 para_k=zeros(1,N*n^4);
 para_w=zeros(1,N*n^4);
@@ -26,30 +10,15 @@ para_w=zeros(1,N*n^4);
 para_n=zeros(1,n^4);
 para_m=zeros(1,n^4);
 para_s=zeros(1,2);
-% para_c=zeros(1,2*N);
-% para_c=zeros(1,2*N);
 
 x0=[1,1,1,1,1,1,1,1,0,0,0,0,... 
  para_k,para_w,para_n,para_m,para_s];
 
 options = odeset('MaxStep', 0.01);
-% options = odeset('MaxStep', 0.02);
 [t,x]=ode45(@mohu_S_fn_20250106,[t0,tf],x0,options);
 
 x_ref1=[sin(t),cos(t)];
 x_ref2=[cos(t),-sin(t)];
-
-% x_ref1=zeros(length(t),2);
-% x_ref2=zeros(length(t),2);
-% for i=1:length(t)
-%     if t(i)>=20 && t(i)<50
-%         x_ref1(i,1)=1;x_ref2(i,1)=2;
-%     elseif t(i)>50 && t(i)<65
-%         x_ref1(i,1)=3;x_ref2(i,1)=1.5;
-%     else
-%         x_ref1(i,1)=0;x_ref2(i,1)=0;
-%     end
-% end
 
 a0=1;
 a1=1;
@@ -92,9 +61,6 @@ e21=x(:,6)-x(:,2);
 e22=x(:,8)-x(:,4);
 e2=[e21;e22];
 e=[e11,e21,e12,e22];%e=[e,e']
-
-% y_ref1=x(2*6+n^4*N+n^4*N+n^4+n^4+1);
-% y_ref2=x(2*6+n^4*N+n^4*N+n^4+n^4+2);
 
 y_ref1=y_true(1,:)';
 y_ref2=y_true(2,:)';
