@@ -1,7 +1,6 @@
-%二自由度机械臂-模糊单边
 % clear all;
 % close all;
-N=1;%选取的边数
+N=1;
 n=5;
 
 t0=0;tf=30;
@@ -11,14 +10,14 @@ T=linspace(t0,tf,100);
 % para_w=linspace(-0.01,0.01,n^4);
 % 
 % % for i = 1:N
-% %     min_val = -0.01 - (i - 1) * 0.003; % 最小值
-% %     max_val = 0.001 + (i - 1) * 0.003; % 最大值
-% %     para_k((i-1)*(n^4)+1:(i-1)*(n^4)+(n^4)) = linspace(min_val, max_val, (n^4))'; % 每列均匀分布
+% %     min_val = -0.01 - (i - 1) * 0.003;
+% %     max_val = 0.001 + (i - 1) * 0.003; 
+% %     para_k((i-1)*(n^4)+1:(i-1)*(n^4)+(n^4)) = linspace(min_val, max_val, (n^4))';
 % % end
 % % for i = 1:N
-% %     min_val = -0.01 - (i - 1) * 0.003; % 最小值
-% %     max_val = 0.001 + (i - 1) * 0.0003; % 最大值
-% %     para_w((i-1)*(n^4)+1:(i-1)*(n^4)+(n^4)) = linspace(min_val, max_val, (n^4))'; % 每列均匀分布
+% %     min_val = -0.01 - (i - 1) * 0.003;
+% %     max_val = 0.001 + (i - 1) * 0.0003; 
+% %     para_w((i-1)*(n^4)+1:(i-1)*(n^4)+(n^4)) = linspace(min_val, max_val, (n^4))'; 
 % % end
 
 para_k=zeros(1,N*n^4);
@@ -33,8 +32,8 @@ para_s=zeros(1,2);
 x0=[1,1,1,1,1,1,1,1,0,0,0,0,... 
  para_k,para_w,para_n,para_m,para_s];
 
-options = odeset('MaxStep', 0.01); % 设置最大步长
-% options = odeset('MaxStep', 0.02); % 设置最大步长
+options = odeset('MaxStep', 0.01);
+% options = odeset('MaxStep', 0.02);
 [t,x]=ode45(@mohu_S_fn_20250106,[t0,tf],x0,options);
 
 x_ref1=[sin(t),cos(t)];
@@ -52,12 +51,11 @@ x_ref2=[cos(t),-sin(t)];
 %     end
 % end
 
-%RR-bot系统参数
-a0=1;%连杆1长度为1
-a1=1;%连杆2长度为1
-m1=0.1;%连杆1的质量为0.1kg
-m2=0.1;%连杆2的质量为0.2kg
-gs=9.8;%重力加速度
+a0=1;
+a1=1;
+m1=0.1;
+m2=0.1;
+gs=9.8;
 y_true=zeros(2,length(t));
 for i=1:length(t)
     M=[(a0^2*m1)/3 + a0^2*m2 + (a1^2*m2)/3 + a0*a1*m2*cos(x(i,2)),  (a1*m2*(2*a1 + 3*a0*cos(x(i,2))))/6;
@@ -78,7 +76,7 @@ end
 
 kr=[-1,0,-2,0,1,0;...
     0,-1,0,-2,0,1]';
-xre=[x(:,5),x(:,6),x(:,7),x(:,8),x_ref1(:,1),x_ref2(:,1)];%length(t)*6   增广状态
+xre=[x(:,5),x(:,6),x(:,7),x(:,8),x_ref1(:,1),x_ref2(:,1)];
 
 ke=[50,0,20,0;...
     0,50,0,20]';
@@ -103,7 +101,6 @@ y_ref2=y_true(2,:)';
 
 u_tau=zeros(2,length(t));
 
-%模糊控制
 xi_1= x(12+2*(n^4)*N+1:12+2*(n^4)*N+n^4);
 
 y_hat_m1=zeros(length(t),N);
@@ -121,115 +118,42 @@ for j=1:length(t)
        end
 end
 
-%控制器设计
 for i=1:length(t)
     u_tau(:,i)=ke'*e(i,:)'+kr'*xre(i,:)'-[y_hat_m1(i);y_hat_m2(i)];
 end
 
-%位置跟踪
+
 Xref2_11=x(:,5);
 Xref2_12=x(:,7);
 X2_1=x(:,1);
 X2_2=x(:,3);
-%速度跟踪
+
 Xref2_21=x(:,6);
 Xref2_22=x(:,8);
 X2_3=x(:,2);
 X2_4=x(:,4);
-% 跟踪误差
+
 E2_11=e11;
 E2_12=e12;
 E2_21=e21;
 E2_22=e22;
-%输入力矩
+
 U2=u_tau;
-%非线性部分
+
 yref2_1=y_true(1,:)';
 yref2_2=y_true(2,:)';
-% 非线性逼近
+
 Y_hat2_1=y_hat_m1;
 Y_hat2_2=y_hat_m2;
-%逼近误差
+
 EE2_1=y_ref1-y_hat_m1;
 EE2_2=y_ref2-y_hat_m2;
 
-disp(['状态1:',num2str(sum(abs(e11)))])
-disp(['状态2:',num2str(sum(abs(e21)))])
-disp(['状态3:',num2str(sum(abs(e12)))])
-disp(['状态4:',num2str(sum(abs(e22)))])
-disp(['状态1:',num2str(sum(abs(e11))/length(t))])
-disp(['状态2:',num2str(sum(abs(e21))/length(t))])
-disp(['状态3:',num2str(sum(abs(e12))/length(t))])
-disp(['状态4:',num2str(sum(abs(e22))/length(t))])
-% 
-% %状态
-% figure()
-% subplot(221)
-% plot(t,x_ref1(:,1),'--r');hold on;
-% plot(t,x(:,5),'-b')
-% plot(t,x(:,1),'--m');grid on;
-% legend('r1','x-ref1','x1')
-% subplot(222)
-% plot(t,x_ref2(:,1),'--r');hold on;
-% plot(t,x(:,6),'-b')
-% plot(t,x(:,2),'--m');grid on;
-% legend('r2','x-ref2','x2')
-% subplot(223)
-% plot(t,x_ref1(:,2),'--r');hold on;
-% plot(t,x(:,7),'-b')
-% plot(t,x(:,3),'--m');grid on;
-% legend('dr1','dx-ref1','dx1')
-% subplot(224)
-% plot(t,x_ref2(:,2),'--r');hold on;
-% plot(t,x(:,8),'-b')
-% plot(t,x(:,4),'--m');grid on;
-% legend('dr2','dx-ref2','dx2')
-% %误差
-% figure()
-% subplot(421);plot(t,er11,'-b');grid on;legend('er1');
-% subplot(422);plot(t,er21,'-b');grid on;legend('er2');
-% subplot(423);plot(t,er12,'-b');grid on;legend('der1');
-% subplot(424);plot(t,er22,'-b');grid on;legend('der2');
-% subplot(425);plot(t,e11,'-b');grid on;legend('e1');
-% subplot(426);plot(t,e21,'-b');grid on;legend('e2');
-% subplot(427);plot(t,e12,'-b');grid on;legend('de1');
-% subplot(428);plot(t,e22,'-b');grid on;legend('de1');
-% %控制
-% figure()
-% plot(t,u_tau');grid on;legend('u1','u2');
-% 
-% figure()
-% plot(t,y_ref1,'-b');hold on;
-% plot(t,y_ref2,'-m');hold on;
-% legend('y_ref1','y_ref2');
-% 
-% 
-% %参数,多边学习权重
-% % figure()
-% % subplot(211)
-% % plot(t,x(:,13+N:12+2*N));grid on;
-% % plot(t,x(:,12+1:12+N));grid on;
-% % subplot(212)
-% % plot(t,x(:,12+N+1:12+N+N));grid on;
-% % legend('W1','W2');
-% 
-% figure()
-% %输出1
-% subplot(221)
-% plot(t,y_ref1,'-b');hold on;
-% plot(t,y_hat_m1,'-g');hold on;
-% 
-% %输出2
-% subplot(222)
-% plot(t,y_ref2,'-b');hold on;
-% plot(t,y_hat_m2,'-g');hold on;
-% 
-% % 逼近误差1
-% subplot(223)
-% plot(t,repmat(y_ref1,1,N)-y_hat_m1);hold on;
-% plot(t,y_ref1-y_hat_m1,'--m');grid on;
-% 
-% % 逼近误差2
-% subplot(224)
-% plot(t,repmat(y_ref2,1,N)-y_hat_m2);hold on;
-% plot(t,y_ref2-y_hat_m2,'--m');grid on;
+disp(['state 1:',num2str(sum(abs(e11)))])
+disp(['state 2:',num2str(sum(abs(e21)))])
+disp(['state 3:',num2str(sum(abs(e12)))])
+disp(['state 4:',num2str(sum(abs(e22)))])
+disp(['state 1:',num2str(sum(abs(e11))/length(t))])
+disp(['state 2:',num2str(sum(abs(e21))/length(t))])
+disp(['state 3:',num2str(sum(abs(e12))/length(t))])
+disp(['state 4:',num2str(sum(abs(e22))/length(t))])
