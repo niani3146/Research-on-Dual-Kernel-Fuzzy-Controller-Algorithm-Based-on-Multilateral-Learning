@@ -1,15 +1,12 @@
-%PID¿ØÖÆ
-% clear all;
-% close all;
 t0=0;tf=30;
 x0=[1,1,1,1,0];
 options = odeset('MaxStep', 0.001); 
 [t,x]=ode45(@PID_test_ode,[t0,tf],x0,options);
 
-A=[0,1;0,0];%µ¹Á¢°ÚÏµÍ³
-B=[0;1];%µ¹Á¢°ÚÏµÍ³
-Ar=[0,1;-1,-2];%²Î¿¼ÏµÍ³
-Br=[0;1];%²Î¿¼ÏµÍ³
+A=[0,1;0,0];
+B=[0;1];
+Ar=[0,1;-1,-2];
+Br=[0;1];
 
 xref=[sin(t),cos(t)];
 
@@ -26,10 +23,10 @@ E11=e;
 E12=de;
 U1=u;
 
-disp(['×´Ì¬1£º',num2str(sum(abs(e))),'£»'])
-disp(['×´Ì¬2£º',num2str(sum(abs(de))),'£»'])
-disp(['×´Ì¬1£º',num2str(sum(abs(e))/length(t)),'£»'])
-disp(['×´Ì¬2£º',num2str(sum(abs(de))/length(t)),'£»'])
+disp(['state 1ï¼š',num2str(sum(abs(e))),'ï¼›'])
+disp(['state 2ï¼š',num2str(sum(abs(de))),'ï¼›'])
+disp(['state 1ï¼š',num2str(sum(abs(e))/length(t)),'ï¼›'])
+disp(['state 2ï¼š',num2str(sum(abs(de))/length(t)),'ï¼›'])
 
 % figure()
 % subplot(2,1,1)
@@ -42,4 +39,3 @@ disp(['×´Ì¬2£º',num2str(sum(abs(de))/length(t)),'£»'])
 % subplot(211);plot(t,e);grid on;legend('e');
 % subplot(212);plot(t,de);grid on;legend('de');
 % figure('name','control signal')
-% plot(t,u');grid on;legend('u');
