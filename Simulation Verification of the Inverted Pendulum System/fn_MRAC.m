@@ -1,5 +1,4 @@
-%¶à±ßÑ§Ï°(n=7)
-n=2;%Ñ¡È¡µÄ±ßÊý
+n=2;%é€‰å–çš„è¾¹æ•°
 ee_yn_pre=zeros(n,1);
 
 t0=0;tf=30;
@@ -11,21 +10,10 @@ para_k=ones(1,n)/n;
 para_d=zeros(1,2*n+n);
 x0=[1,1,1,1,0,0,...
     para_y,para_k,para_d];
-options = odeset('MaxStep', 0.001); % ÉèÖÃ×î´ó²½³¤
+options = odeset('MaxStep', 0.001); % è®¾ç½®æœ€å¤§æ­¥é•¿
 [t,x]=ode45(@fn_MRAC_ode,[t0,tf],x0,options);
 
 x_ref=[sin(t),cos(t)];
-% x_ref=zeros(length(t),2);
-% % x_ref(:,1)=1;
-% for i=1:length(t)
-%     if t(i)>=20 && t(i)<25
-%         x_ref(i,1)=1;
-%     elseif t(i)>50 && t(i)<65
-%         x_ref(i,1)=3;
-%     else
-%         x_ref(i,1)=0;
-%     end
-% end
 
 Wd_vec=[1,-1,0.5]';
 
@@ -42,11 +30,8 @@ y_ref=zeros(length(t),1);
 fphi=zeros(length(t),3);
 for i=1:length(t)
     fphi(i,:)=[exp(x(i,1)*x(i,2)),sin(x(i,1)),abs(x(i,2))*x(i,2)];
-%     fphi(i,:)=[sin(x(i,1)),cos(x(i,1)),tan(x(i,1))]';
-%     fphi(i,:)=[sin(t(i)),cos(t(i)),1]';
     y_ref(i)=Wd_vec'*fphi(i,:)';
 end
-% e_y=y_ref-y_hat;   
 
 y_hat=zeros(length(t),1);
 u_tau=zeros(length(t),1);
@@ -56,10 +41,10 @@ for i=1:length(t)
 end
 e_y=y_ref-y_hat;  
 
-disp(['×´Ì¬1:',num2str(sum(abs(e1)))])
-disp(['×´Ì¬2:',num2str(sum(abs(e2)))])
-disp(['×´Ì¬1:',num2str(sum(abs(e1))/length(t))])
-disp(['×´Ì¬2:',num2str(sum(abs(e2))/length(t))])
+disp(['state 1:',num2str(sum(abs(e1)))])
+disp(['state 2:',num2str(sum(abs(e2)))])
+disp(['state 1:',num2str(sum(abs(e1))/length(t))])
+disp(['state 2:',num2str(sum(abs(e2))/length(t))])
 
 X31=x(:,1);
 X32=x(:,2);
@@ -69,7 +54,6 @@ U3=u_tau;
 EE_3=e_y;
 Y_hat_3=y_hat;
 
-% %×´Ì¬
 % figure()
 % subplot(211)
 % plot(t,x_ref(:,1),'--r');hold on;
@@ -81,7 +65,7 @@ Y_hat_3=y_hat;
 % plot(t,x(:,4),'-b')
 % plot(t,x(:,2),'--m');grid on;
 % legend('r2','x-ref2','x2')
-% %Îó²î
+
 % figure()
 % subplot(211)
 % plot(t,er1,'-b');hold on;
@@ -89,11 +73,11 @@ Y_hat_3=y_hat;
 % subplot(212)
 % plot(t,e1,'-b');hold on;
 % plot(t,e2,'-m');grid on;legend('e1','e2')
-% %¿ØÖÆ
+
 % figure()
 % plot(t,u_tau);grid on;legend('u')
 % 
-% %²ÎÊý
 % figure()
 % plot(t,x(:,7+n:6+2*n));
+
 % hold on;grid on;legend('k1','k2','k3','k4','k5','k6','k7')
